@@ -26,7 +26,14 @@ const QUOTES_FILE = path.join(__dirname, "..", "quotes.json");
 const PRODUCTS_FILE = path.join(__dirname, "..", "products.json");
 const QUOTE_TTL_DAYS = 30;
 
+// Disable disk persistence on serverless runtimes (Vercel etc.) since the
+// filesystem is read-only and writes would crash the function. Quotes and
+// products live entirely in module memory there; each cold start resets to
+// the seed catalog.
+const PERSIST = !process.env.VERCEL;
+
 function loadQuotes(): Record<string, Quote> {
+  if (!PERSIST) return {};
   try {
     if (fs.existsSync(QUOTES_FILE)) {
       return JSON.parse(fs.readFileSync(QUOTES_FILE, "utf-8"));
@@ -36,10 +43,14 @@ function loadQuotes(): Record<string, Quote> {
 }
 
 function saveQuotes(store: Record<string, Quote>): void {
-  fs.writeFileSync(QUOTES_FILE, JSON.stringify(store, null, 2));
+  if (!PERSIST) return;
+  try {
+    fs.writeFileSync(QUOTES_FILE, JSON.stringify(store, null, 2));
+  } catch {}
 }
 
 function loadProducts(): Product[] {
+  if (!PERSIST) return [...seedProducts];
   try {
     if (fs.existsSync(PRODUCTS_FILE)) {
       const raw = JSON.parse(fs.readFileSync(PRODUCTS_FILE, "utf-8"));
@@ -52,14 +63,17 @@ function loadProducts(): Product[] {
         }));
       }
     }
+    // First run — initialize from seed and persist.
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(seedProducts, null, 2));
   } catch {}
-  // First run — initialize from seed and persist.
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(seedProducts, null, 2));
   return [...seedProducts];
 }
 
 function saveProducts(list: Product[]): void {
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(list, null, 2));
+  if (!PERSIST) return;
+  try {
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(list, null, 2));
+  } catch {}
 }
 
 const quotes: Record<string, Quote> = loadQuotes();
