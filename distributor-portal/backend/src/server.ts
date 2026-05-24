@@ -44,9 +44,12 @@ function loadProducts(): Product[] {
     if (fs.existsSync(PRODUCTS_FILE)) {
       const raw = JSON.parse(fs.readFileSync(PRODUCTS_FILE, "utf-8"));
       if (Array.isArray(raw)) {
-        // Backfill `active` for any persisted records from older versions.
-        return raw.map((p: Product) => ({ active: true, ...p }));
+        return raw.map((p: Partial<Product>): Product => ({
+          ...(p as Product),
+          active: typeof p.active === "boolean" ? p.active : true,
+        }));
       }
+
     }
   } catch {}
   // First run — initialize from seed and persist.
