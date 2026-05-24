@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 110" width="420" height="110" role="img" aria-label="HEN">
+  <rect width="420" height="110" fill="#000"/>
+  <!-- H -->
+  <path d="M28 22 h20 v28 h44 v-28 h20 v66 h-20 v-26 h-44 v26 h-20 z" fill="#fff"/>
+  <!-- E -->
+  <path d="M138 22 h78 v14 h-58 v12 h48 v14 h-48 v12 h58 v14 h-78 z" fill="#fff"/>
+  <!-- Blue arrow accent on the E's middle bar -->
+  <path d="M178 55 l30 0 l-6 -5 v10 z" fill="#1d6dff"/>
+  <!-- N -->
+  <path d="M232 22 h18 l44 42 v-42 h20 v66 h-18 l-44 -42 v42 h-20 z" fill="#fff"/>
+  <!-- registered mark -->
+  <circle cx="346" cy="30" r="6" fill="none" stroke="#fff" stroke-width="1"/>
+  <text x="343" y="33" font-family="Arial, sans-serif" font-size="9" fill="#fff">R</text>
+</svg>
